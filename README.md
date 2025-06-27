@@ -1,5 +1,18 @@
-# Vue 3 + Vite
+# DnCanvas
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+This is a minimal Vue.js application created with Vite. It displays a Canvas element that fills the entire viewport.
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+## Development
+
+To start the development server:
+
+```
+npm run dev
+```
+
+## Features
+- Canvas element fills the entire browser viewport
+- Responsive to window resizing
+
+---
+Generated with Vite + Vue 3.

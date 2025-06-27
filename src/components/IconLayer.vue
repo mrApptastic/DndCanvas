@@ -1,0 +1,80 @@
+<template>
+  <div class="icon-layer">
+    <div v-for="icon in icons" :key="icon.id"
+      class="icon-draggable"
+      :style="iconStyle(icon)"
+      @mousedown="startDrag(icon, $event)"
+    >
+      <img :src="icon.src" :alt="'icon-'+icon.id" draggable="false" />
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { icons } from '../services/iconStore'
+import { squareSize } from '../services/sharedStore'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+
+let dragIcon = null
+let dragOffset = { x: 0, y: 0 }
+
+function startDrag(icon, e) {
+  dragIcon = icon
+  dragOffset.x = e.clientX - icon.x
+  dragOffset.y = e.clientY - icon.y
+  document.addEventListener('mousemove', onDrag)
+  document.addEventListener('mouseup', stopDrag)
+}
+
+function onDrag(e) {
+  if (!dragIcon) return
+  dragIcon.x = e.clientX - dragOffset.x
+  dragIcon.y = e.clientY - dragOffset.y
+}
+
+function stopDrag() {
+  dragIcon = null
+  document.removeEventListener('mousemove', onDrag)
+  document.removeEventListener('mouseup', stopDrag)
+}
+
+function iconStyle(icon) {
+  return {
+    position: 'absolute',
+    left: icon.x + 'px',
+    top: icon.y + 'px',
+    width: squareSize.value + 'px',
+    height: squareSize.value + 'px',
+    zIndex: 5,
+    cursor: 'grab',
+    userSelect: 'none',
+  }
+}
+</script>
+
+<style scoped>
+.icon-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 5;
+}
+.icon-draggable {
+  pointer-events: auto;
+  box-shadow: 0 2px 8px #0006;
+  border-radius: 6px;
+  background: #fff8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.icon-draggable img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+</style>

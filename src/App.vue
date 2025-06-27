@@ -1,30 +1,90 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
+import ToolBox from './components/ToolBox.vue'
+import IconLayer from './components/IconLayer.vue'
+import { squareSize, zoom, offsetX, offsetY, showGrid, panMode } from './services/sharedStore'
+import { ref } from 'vue'
+import { icons } from './services/iconStore'
+
+const uploadedImage = ref(null)
+
+function handleFileUpload(e) {
+  const file = e.target.files[0]
+  if (file) {
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      uploadedImage.value = event.target.result
+    }
+    reader.readAsDataURL(file)
+  }
+}
+
+function handleIconUpload(e) {
+  const files = Array.from(e.target.files)
+  files.forEach(file => {
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      icons.value.push({
+        id: Date.now() + Math.random(),
+        src: event.target.result,
+        x: 0,
+        y: 0
+      })
+    }
+    reader.readAsDataURL(file)
+  })
+  e.target.value = ''
+}
 </script>
 
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+  <HelloWorld :background-image="uploadedImage" />
+  <IconLayer />
+  <ToolBox>
+    <br/>
+    <hr/>
+    <div style="display: flex; flex-direction: column; gap: 10px; min-width: 180px;">
+      <label>
+        Grid størrelse:
+        <input type="number" v-model.number="squareSize" min="5" max="200" step="1" />
+      </label>
+      <label>
+        Zoom:
+        <input type="number" v-model.number="zoom" min="0.1" max="5" step="0.01" />
+      </label>
+      <label>
+        X offset:
+        <input type="number" v-model.number="offsetX" min="-2000" max="2000" step="1" />
+      </label>
+      <label>
+        Y offset:
+        <input type="number" v-model.number="offsetY" min="-2000" max="2000" step="1" />
+      </label>
+      <label style="display: flex; align-items: center; gap: 6px;">
+        <input type="checkbox" v-model="showGrid" /> Vis grid
+      </label>
+      <label style="display: flex; align-items: center; gap: 6px;">
+        <input type="checkbox" v-model="panMode" /> Pan mode (træk med mus)
+      </label>
+      <label>
+        Baggrundsbillede:
+        <input type="file" accept="image/*" @change="handleFileUpload" />
+      </label>
+      <label>
+        Ikoner:
+        <input type="file" accept="image/*" multiple @change="handleIconUpload" />
+      </label>
+    </div>
+  </ToolBox>
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+html, body, #app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+body {
+  overflow: hidden;
 }
 </style>
