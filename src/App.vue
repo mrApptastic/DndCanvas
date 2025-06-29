@@ -1,5 +1,5 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+import CanvasLayer from './components/CanvasLayer.vue'
 import ToolBox from './components/ToolBox.vue'
 import IconLayer from './components/IconLayer.vue'
 import { squareSize, zoom, offsetX, offsetY, showGrid, panMode } from './services/sharedStore'
@@ -38,7 +38,7 @@ function handleIconUpload(e) {
 </script>
 
 <template>
-  <HelloWorld :background-image="uploadedImage" />
+  <CanvasLayer :background-image="uploadedImage" />
   <IconLayer />
   <ToolBox>
     <br/>

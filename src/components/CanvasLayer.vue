@@ -140,5 +140,6 @@ canvas:first-of-type {
 
 canvas:nth-of-type(2) {
   z-index: 1;
+  pointer-events: none;
 }
 </style>
