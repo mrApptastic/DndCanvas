@@ -1,6 +1,15 @@
 <template>
   <div v-if="visible" class="toolbox">
     <button class="toolbox-toggle" @click="toggle">✕</button>
+    <h3>Ikoner</h3>
+    <ul>
+      <li v-for="icon in iconsData" :key="icon.id" style="margin-bottom: 8px; display: flex; align-items: center;">
+        <img v-if="icon.src" :src="icon.src" alt="ikon" style="width: 32px; height: 32px; object-fit: contain; margin-right: 8px; background: #fff2; border-radius: 4px;" />
+        <input v-model="icon.name" placeholder="Navn" style="margin-right: 8px;" />
+        <button @click="removeIcon(icon.id)" style="margin-left: 8px;">Fjern</button>
+      </li>
+    </ul>
+    <input type="file" @change="onFileChange" accept="image/*" multiple style="margin-bottom: 8px;" />
     <slot />
   </div>
   <button v-else class="toolbox-toggle-open" @click="toggle">☰</button>
@@ -8,10 +17,32 @@
 
 <script setup>
 import { ref } from 'vue'
+import { iconsData } from '../services/sharedStore'
 
 const visible = ref(true)
 function toggle() {
   visible.value = !visible.value
+}
+
+function removeIcon(id) {
+  iconsData.value = iconsData.value.filter(icon => icon.id !== id)
+}
+
+function onFileChange(e) {
+  const files = Array.from(e.target.files)
+  files.forEach(file => {
+    const reader = new FileReader()
+    reader.onload = function(evt) {
+      const name = file.name.replace(/\.[^/.]+$/, '')
+      iconsData.value.push({
+        id: Date.now() + Math.random(),
+        name,
+        src: evt.target.result
+      })
+    }
+    reader.readAsDataURL(file)
+  })
+  e.target.value = '' // reset file input
 }
 </script>
 

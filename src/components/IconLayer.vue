@@ -1,6 +1,6 @@
 <template>
   <div class="icon-layer">
-    <div v-for="icon in icons" :key="icon.id"
+    <div v-for="icon in iconsData" :key="icon.id"
       class="icon-draggable"
       :style="iconStyle(icon)"
       @mousedown="startDrag(icon, $event)"
@@ -11,17 +11,17 @@
 </template>
 
 <script setup>
-import { icons } from '../services/iconStore'
+import { iconsData } from '../services/sharedStore'
 import { squareSize } from '../services/sharedStore'
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref } from 'vue'
 
 let dragIcon = null
 let dragOffset = { x: 0, y: 0 }
 
 function startDrag(icon, e) {
   dragIcon = icon
-  dragOffset.x = e.clientX - icon.x
-  dragOffset.y = e.clientY - icon.y
+  dragOffset.x = e.clientX - (icon.x || 0)
+  dragOffset.y = e.clientY - (icon.y || 0)
   document.addEventListener('mousemove', onDrag)
   document.addEventListener('mouseup', stopDrag)
 }
@@ -41,8 +41,8 @@ function stopDrag() {
 function iconStyle(icon) {
   return {
     position: 'absolute',
-    left: icon.x + 'px',
-    top: icon.y + 'px',
+    left: (icon.x || 0) + 'px',
+    top: (icon.y || 0) + 'px',
     width: squareSize.value + 'px',
     height: squareSize.value + 'px',
     zIndex: 5,

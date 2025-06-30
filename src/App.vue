@@ -1,39 +1,21 @@
 <script setup>
-import CanvasLayer from './components/CanvasLayer.vue'
-import ToolBox from './components/ToolBox.vue'
-import IconLayer from './components/IconLayer.vue'
-import { squareSize, zoom, offsetX, offsetY, showGrid, panMode } from './services/sharedStore'
-import { ref } from 'vue'
-import { icons } from './services/iconStore'
+import CanvasLayer from './components/CanvasLayer.vue';
+import ToolBox from './components/ToolBox.vue';
+import IconLayer from './components/IconLayer.vue';
+import { squareSize, zoom, offsetX, offsetY, showGrid, panMode } from './services/sharedStore';
+import { ref } from 'vue';
 
-const uploadedImage = ref(null)
+const uploadedImage = ref(null);
 
 function handleFileUpload(e) {
-  const file = e.target.files[0]
+  const file = e.target.files[0];
   if (file) {
     const reader = new FileReader()
     reader.onload = (event) => {
-      uploadedImage.value = event.target.result
-    }
-    reader.readAsDataURL(file)
+      uploadedImage.value = event.target.result;
+    };
+    reader.readAsDataURL(file);
   }
-}
-
-function handleIconUpload(e) {
-  const files = Array.from(e.target.files)
-  files.forEach(file => {
-    const reader = new FileReader()
-    reader.onload = (event) => {
-      icons.value.push({
-        id: Date.now() + Math.random(),
-        src: event.target.result,
-        x: 0,
-        y: 0
-      })
-    }
-    reader.readAsDataURL(file)
-  })
-  e.target.value = ''
 }
 </script>
 
@@ -69,10 +51,6 @@ function handleIconUpload(e) {
       <label>
         Baggrundsbillede:
         <input type="file" accept="image/*" @change="handleFileUpload" />
-      </label>
-      <label>
-        Ikoner:
-        <input type="file" accept="image/*" multiple @change="handleIconUpload" />
       </label>
     </div>
   </ToolBox>
