@@ -3,46 +3,48 @@
     <button class="toolbox-toggle" @click="toggle">✕</button>
     <h3>Ikoner</h3>
     <ul>
-      <li v-for="icon in iconsData" :key="icon.id" style="margin-bottom: 8px; display: flex; align-items: center;">
-        <img v-if="icon.src" :src="icon.src" alt="ikon" style="width: 32px; height: 32px; object-fit: contain; margin-right: 8px; background: #fff2; border-radius: 4px;" />
-        <input v-model="icon.name" placeholder="Navn" style="margin-right: 8px;" />
-        <button @click="removeIcon(icon.id)" style="margin-left: 8px;">Fjern</button>
+      <li v-for="icon in iconsData" :key="icon.id" class="icon-list-item">
+        <img v-if="icon.src" :src="icon.src" alt="ikon" class="icon-img" />
+        <input v-model="icon.name" placeholder="Navn" class="icon-name-input" />
+        <button @click="removeIcon(icon.id)" class="icon-remove-btn">Fjern</button>
       </li>
     </ul>
-    <input type="file" @change="onFileChange" accept="image/*" multiple style="margin-bottom: 8px;" />
+    <input type="file" @change="onFileChange" accept="image/*" multiple class="icon-file-input" />
     <slot />
   </div>
   <button v-else class="toolbox-toggle-open" @click="toggle">☰</button>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { iconsData } from '../services/sharedStore'
+import { ref } from 'vue';
+import { iconsData } from '../services/sharedStore';
 
-const visible = ref(true)
+const visible = ref(true);
 function toggle() {
-  visible.value = !visible.value
+  visible.value = !visible.value;
 }
 
 function removeIcon(id) {
-  iconsData.value = iconsData.value.filter(icon => icon.id !== id)
+  iconsData.value = iconsData.value.filter(icon => {
+    return icon.id !== id;
+  });
 }
 
 function onFileChange(e) {
-  const files = Array.from(e.target.files)
+  const files = Array.from(e.target.files);
   files.forEach(file => {
-    const reader = new FileReader()
+    const reader = new FileReader();
     reader.onload = function(evt) {
-      const name = file.name.replace(/\.[^/.]+$/, '')
+      const name = file.name.replace(/\.[^/.]+$/, '');
       iconsData.value.push({
         id: Date.now() + Math.random(),
         name,
         src: evt.target.result
-      })
-    }
-    reader.readAsDataURL(file)
-  })
-  e.target.value = '' // reset file input
+      });
+    };
+    reader.readAsDataURL(file);
+  });
+  e.target.value = '';
 }
 </script>
 
@@ -83,5 +85,27 @@ function onFileChange(e) {
   padding: 8px 14px;
   cursor: pointer;
   box-shadow: 0 2px 8px #0006;
+}
+.icon-list-item {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+.icon-img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  margin-right: 8px;
+  background: #fff2;
+  border-radius: 4px;
+}
+.icon-name-input {
+  margin-right: 8px;
+}
+.icon-remove-btn {
+  margin-left: 8px;
+}
+.icon-file-input {
+  margin-bottom: 8px;
 }
 </style>
