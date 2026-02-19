@@ -6,6 +6,7 @@
       <li v-for="icon in iconsData" :key="icon.id" class="icon-list-item">
         <img v-if="icon.src" :src="icon.src" alt="ikon" class="icon-img" />
         <input v-model="icon.name" placeholder="Navn" class="icon-name-input" />
+        <RouterLink :to="'/character/' + icon.id" class="icon-edit-btn">Rediger</RouterLink>
         <button @click="removeIcon(icon.id)" class="icon-remove-btn">Fjern</button>
       </li>
     </ul>
@@ -17,6 +18,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import { RouterLink } from 'vue-router';
 import { iconsData } from '../services/sharedStore';
 
 const visible = ref(true);
@@ -104,6 +106,18 @@ function onFileChange(e) {
 }
 .icon-remove-btn {
   margin-left: 8px;
+}
+.icon-edit-btn {
+  margin-left: 8px;
+  padding: 2px 8px;
+  background: #444;
+  color: #fff;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.9em;
+}
+.icon-edit-btn:hover {
+  background: #666;
 }
 .icon-file-input {
   margin-bottom: 8px;
